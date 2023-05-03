@@ -6,7 +6,10 @@ ruby "3.1.3"
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.4", ">= 7.0.4.3"
 
+# IDトークンの検証とデコードに使う gem
 gem 'jwt'
+# クライアントシークレットを git リポジトリに入れたくないので
+# .env ファイルに書き環境変数として読む
 gem 'dotenv-rails'
 
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]

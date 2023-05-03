@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'net/http'
 
 module HttpUtil
@@ -22,6 +24,6 @@ module HttpUtil
   end
 
   def raise_http_error(http_method, url, response)
-    raise "HTTP error: #{method} #{url}, status:#{response.code}, body: #{response.body}"
+    raise "HTTP error: #{http_method} #{url}, status:#{response.code}, body: #{response.body}"
   end
 end

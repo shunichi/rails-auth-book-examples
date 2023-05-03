@@ -1,10 +1,10 @@
-<h1>Hello</h1>
+<h1>OpenID Connect サンプルアプリ</h1>
 
 <% if session[:uid] %>
   <div>
     こんにちは <%= session[:user_name] %> さん
   </div>
-  <%= button_to 'ログアウト', '/session', method: :delete, data: { turbo: false } %>
+  <%= button_to 'ログアウト', '/session', method: :delete %>
 <% else %>
   <%= button_to 'Googleでログイン', session_path, data: { turbo: false } %>
 <% end %>
