@@ -8,8 +8,8 @@ class AuthCallbacksController < ApplicationController
     Rails.logger.info '------------------------ callback params'
     Rails.logger.info JSON.pretty_generate(params.to_unsafe_h)
 
-    Rails.logger.info '------------------------ callback request headers'
-    Rails.logger.info JSON.pretty_generate(request.headers.to_h)
+    # Rails.logger.info '------------------------ callback request headers'
+    # Rails.logger.info JSON.pretty_generate(request.headers.to_h)
 
     # クエリパラメータに入っている code (認可コード) を使ってトークンを取得する
     token_response = GoogleAuth.request_token(params, session)

@@ -2,8 +2,8 @@
 
 class SessionsController < ApplicationController
   def create
-    Rails.logger.info '------------------------ sessions#create request headers'
-    Rails.logger.info JSON.pretty_generate(request.headers.to_h)
+    # Rails.logger.info '------------------------ sessions#create request headers'
+    # Rails.logger.info JSON.pretty_generate(request.headers.to_h)
     redirect_to GoogleAuth.build_auth_url(session), allow_other_host: true
   end
 
