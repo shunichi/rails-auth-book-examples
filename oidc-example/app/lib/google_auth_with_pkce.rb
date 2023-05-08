@@ -13,6 +13,7 @@ module GoogleAuthWithPkce
     # code_challenge = BASE64URL-ENCODE(SHA256(ASCII(code_verifier))) と仕様で定義されている
     code_challenge = Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier), padding: false)
     code_challenge_method = 'S256'
+    # code_verifier はセッションに保存しておく
     session[:code_verifier] = code_verifier
 
     auth_params = {
@@ -33,8 +34,8 @@ module GoogleAuthWithPkce
       # https://developers.google.com/identity/protocols/oauth2/scopes#openid-connect
       scope: 'openid email profile',
       # code_challenge と code_challenge_method をパラメータとして渡すと PKCE が使われる
-      code_challenge:,
-      code_challenge_method:,
+      code_challenge: code_challenge,
+      code_challenge_method: code_challenge_method,
     }
     "#{AUTHENTICATION_ENDPOINT}?#{auth_params.to_query}"
   end
@@ -55,7 +56,7 @@ module GoogleAuthWithPkce
       grant_type: 'authorization_code',
       # code_challenge の元になった code_verifier を渡すと
       # トークンエンドポイントで code_challenge の計算が行われ、
-      # 認可リクエスト時のパラメータとの一致するかチェックされる
+      # 認可リクエスト時のパラメータと一致するかチェックされる
       code_verifier: session[:code_verifier],
       # わざとおかしな code_verifer を渡すと失敗するか試す場合は下の code_verifier を使う
       # code_verifier: SecureRandom.urlsafe_base64(32),
@@ -65,13 +66,5 @@ module GoogleAuthWithPkce
     response = HttpUtil.post(TOKEN_ENDPOINT, body.to_query, headers)
     # レスポンスのJSONを解釈し必要な情報を取り出す
     TokenResponse.new(response.body)
-  end
-
-  def request_userinfo(access_token)
-    headers = {
-      'Authorization' => "Bearer #{access_token}"
-    }
-    response = HttpUtil.get(USERINFO_ENDPOINT, headers)
-    JSON.parse(response.body)
   end
 end

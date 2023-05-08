@@ -27,7 +27,7 @@ module GoogleAuthWithState
       scope: 'openid email profile',
       # CSRFで攻撃者の認可コードを使わせる攻撃を防ぐために state を渡す
       # http://openid-foundation-japan.github.io/rfc6749.ja.html#CSRF
-      state:,
+      state: state,
     }
     session[:oauth_state] = state
     "#{AUTHENTICATION_ENDPOINT}?#{auth_params.to_query}"
@@ -58,13 +58,5 @@ module GoogleAuthWithState
     response = HttpUtil.post(TOKEN_ENDPOINT, body, headers)
     # レスポンスのJSONを解釈し必要な情報を取り出す
     TokenResponse.new(response.body)
-  end
-
-  def request_userinfo(access_token)
-    headers = {
-      'Authorization' => "Bearer #{access_token}"
-    }
-    response = HttpUtil.get(USERINFO_ENDPOINT, headers)
-    JSON.parse(response.body)
   end
 end

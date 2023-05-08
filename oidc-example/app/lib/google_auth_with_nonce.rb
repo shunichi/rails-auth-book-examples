@@ -24,11 +24,15 @@ module GoogleAuthWithNonce
       # * profile - ユーザーの公開プロフィールの取得
       # https://developers.google.com/identity/protocols/oauth2/scopes#openid-connect
       scope: 'openid email profile',
-      # IDトークンのリプレイ攻撃を防ぐための nonce (サーバーでトークンAPIをトークンリプレイ攻撃はできないはずだが一応)
+      # IDトークンのリプレイ攻撃を防ぐための nonce
+      # サーバーでトークンAPIを呼ぶ場合はトークンリプレイ攻撃は
+      # できないのでその意味では不要。
+      # ただし state と同様にCSRFを防ぐ意味がある。
       # nonce は生のランダム値を HttpOnly cookie に保存して、
-      # パラメータとしては生の値の暗号学的ハッシュを渡す手法が OpenID Connect の仕様で紹介されている
+      # パラメータとしては生の値の暗号学的ハッシュを渡す手法が
+      # OpenID Connect の仕様で紹介されている。
       # http://openid-foundation-japan.github.io/openid-connect-core-1_0.ja.html#NonceNotes
-      nonce: OpenSSL::Digest::SHA256.hexdigest(raw_nonce),
+      nonce: Digest::SHA256.hexdigest(raw_nonce),
     }
     session[:oidc_raw_nonce] = raw_nonce
     "#{AUTHENTICATION_ENDPOINT}?#{auth_params.to_query}"
@@ -48,14 +52,7 @@ module GoogleAuthWithNonce
       grant_type: 'authorization_code',
     }.to_query
     response = HttpUtil.post(TOKEN_ENDPOINT, body, headers)
+    # 同じ nonce を二度使ってはいけないので session から削除するのがポイント
     TokenResponse.new(response.body, raw_nonce: session.delete(:oidc_raw_nonce))
-  end
-
-  def request_userinfo(access_token)
-    headers = {
-      'Authorization' => "Bearer #{access_token}"
-    }
-    response = HttpUtil.get(USERINFO_ENDPOINT, headers)
-    JSON.parse(response.body)
   end
 end
