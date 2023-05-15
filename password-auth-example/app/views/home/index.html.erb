@@ -1,0 +1,12 @@
+<h1>パスワード認証サンプル</h1>
+
+<% if current_user %>
+  こんにちは <%= current_user.login_id %> さん<br>
+  <%= button_to 'ログアウト', session_path, method: :delete %>
+<% else %>
+  <ul>
+    <li><%= link_to 'ログイン', new_session_path %></li>
+    <li><%= link_to 'ユーザー登録', new_registration_path %></li>
+  </ul>
+<% end %>
+

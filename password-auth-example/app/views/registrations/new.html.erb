@@ -1,0 +1,21 @@
+<h1>ユーザー登録</h1>
+
+<% if @user.errors.present? %>
+  <b>エラーがあります。</b>
+  <ul>
+    <% @user.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= form_with model: @user, url: registration_path do |f| %>
+  <%= f.label :login_id, 'ユーザーID' %><br>
+  <%= f.text_field :login_id, required: true %><br>
+  <%= f.label :password, 'パスワード' %><br>
+  <%= f.password_field :password, required: true %><br>
+  <br>
+  <%= f.submit 'ユーザー登録' %>
+<% end %>
+
+<%= link_to 'トップページに戻る', root_path %>

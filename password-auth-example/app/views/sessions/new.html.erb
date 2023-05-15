@@ -1,0 +1,12 @@
+<h1>ログイン</h1>
+
+<%= form_with url: session_path do |f| %>
+  <%= f.label :login_id, 'ユーザーID' %><br>
+  <%= f.text_field :login_id, required: true %><br>
+  <%= f.label :password, 'パスワード' %><br>
+  <%= f.password_field :password, required: true %><br>
+  <br>
+  <%= f.submit 'ログイン' %>
+<% end %>
+
+<%= link_to 'トップページに戻る', root_path %>
