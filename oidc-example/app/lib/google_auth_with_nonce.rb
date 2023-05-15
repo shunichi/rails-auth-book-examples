@@ -1,12 +1,24 @@
-# Googleの公式ドキュメント https://developers.google.com/identity/openid-connect/openid-connect
+# frozen_string_literal: true
 
+# Authorization Code Flow で認証(nonce使用)
 module GoogleAuthWithNonce
   include GoogleAuthBase
 
   module_function
 
   def build_auth_url(session)
-    raw_nonce = SecureRandom.hex(20)
+    # IDトークンのリプレイ攻撃を防ぐための nonce
+    # サーバーでトークンAPIを呼ぶ場合はリプレイ攻撃は
+    # できないのでその意味では不要。
+    # ただし state と同様にCSRFを防ぐ意味がある。
+    raw_nonce = SecureRandom.hex(32)
+    session[:oidc_raw_nonce] = raw_nonce
+    # 生のランダム値を nonce にしても良いが
+    # ランダム値の暗号学的ハッシュを nonce とする手法が
+    # OpenID Connect の仕様で紹介されているので、それを採用する。
+    # http://openid-foundation-japan.github.io/openid-connect-core-1_0.ja.html#NonceNotes
+    nonce = Digest::SHA256.hexdigest(raw_nonce)
+
     auth_params = {
       # 一度同意済みでも同意画面を出す場合に prompt=concent を指定する
       prompt: 'consent',
@@ -24,17 +36,8 @@ module GoogleAuthWithNonce
       # * profile - ユーザーの公開プロフィールの取得
       # https://developers.google.com/identity/protocols/oauth2/scopes#openid-connect
       scope: 'openid email profile',
-      # IDトークンのリプレイ攻撃を防ぐための nonce
-      # サーバーでトークンAPIを呼ぶ場合はトークンリプレイ攻撃は
-      # できないのでその意味では不要。
-      # ただし state と同様にCSRFを防ぐ意味がある。
-      # nonce は生のランダム値を HttpOnly cookie に保存して、
-      # パラメータとしては生の値の暗号学的ハッシュを渡す手法が
-      # OpenID Connect の仕様で紹介されている。
-      # http://openid-foundation-japan.github.io/openid-connect-core-1_0.ja.html#NonceNotes
-      nonce: Digest::SHA256.hexdigest(raw_nonce),
+      nonce: nonce,
     }
-    session[:oidc_raw_nonce] = raw_nonce
     "#{AUTHENTICATION_ENDPOINT}?#{auth_params.to_query}"
   end
 

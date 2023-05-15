@@ -1,13 +1,16 @@
 # frozen_string_literal: true
 
-# Googleの公式ドキュメント https://developers.google.com/identity/openid-connect/openid-connect
+# Authorization Code Flow で認証(state使用)
 module GoogleAuthWithState
   include GoogleAuthBase
 
   module_function
 
   def build_auth_url(session)
-    state = SecureRandom.hex(20)
+    # 不正アクセス防止用にランダムな state を生成し、 session に保存しておく
+    # 認可サーバーからのリダイレクト時にも同じ state が渡されるので検証する
+    state = SecureRandom.hex(32)
+    session[:oauth_state] = state
     auth_params = {
       # 一度同意済みでも同意画面を出す場合に prompt=concent を指定する
       prompt: 'consent',
@@ -29,7 +32,6 @@ module GoogleAuthWithState
       # http://openid-foundation-japan.github.io/rfc6749.ja.html#CSRF
       state: state,
     }
-    session[:oauth_state] = state
     "#{AUTHENTICATION_ENDPOINT}?#{auth_params.to_query}"
   end
 

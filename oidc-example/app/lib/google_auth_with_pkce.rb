@@ -8,7 +8,7 @@ module GoogleAuthWithPkce
 
   def build_auth_url(session)
     # code_verifier はランダムな URL-Safe Base64 で 43〜128文字
-    code_verifier = SecureRandom.urlsafe_base64(96) # 32〜96 -> 43〜128
+    code_verifier = SecureRandom.urlsafe_base64(64) # 32〜96 -> 43〜128
     # code_challenge_method == 'S256' のときは
     # code_challenge = BASE64URL-ENCODE(SHA256(ASCII(code_verifier))) と仕様で定義されている
     code_challenge = Base64.urlsafe_encode64(Digest::SHA256.digest(code_verifier), padding: false)
