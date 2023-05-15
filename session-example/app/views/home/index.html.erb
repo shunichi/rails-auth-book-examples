@@ -1,0 +1,18 @@
+<h1>Railsのセッションのサンプルアプリ</h1>
+
+<ul>
+  <li><%= link_to '自作の store_session でセッションを上書き', root_path(write: 1) %></li>
+  <li><%= link_to 'セッションをリセット', root_path(reset: 1) %></li>
+</ul>
+
+<h2>Rails の session で読んだデータ</h2>
+<pre><code>
+<%= JSON.pretty_generate(session.to_h) %>
+</code></pre>
+
+<% if @session_data.present? %>
+<h2>自作の load_session で読んだデータ</h2>
+<pre><code>
+<%= JSON.pretty_generate(@session_data) %>
+</code></pre>
+<% end %>
