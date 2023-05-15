@@ -1,24 +1,15 @@
-# README
+# OpenID Connect サンプルアプリ
+OpenID Connect の説明のためのサンプルアプリです。
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+app/lib/google_auth.rb を書き換えると、攻撃対策の切り替え(state, nonce, PKCE)ができます。
 
-Things you may want to cover:
+## 実行方法
 
-* Ruby version
+```
+cp .env.example .env
+# .env にGCPで得たクライアントIDやクライアントシークレットを設定します
+bundle install
+bundle exec rails s
+```
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+ブラウザで http://localhost:3000 を開いてください。

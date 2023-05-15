@@ -1,24 +1,13 @@
-# README
+# omniauth-google-oauth2 を使ったGoogleログインのサンプルアプリ
+書籍では説明していませんが、gemを使ってGoogleログインを実装するサンプルです。
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## 実行方法
 
-Things you may want to cover:
+```
+cp .env.example .env
+# .env にGCPで得たクライアントIDやクライアントシークレットを設定します
+bundle install
+bundle exec rails s
+```
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+ブラウザで http://localhost:3000 を開いてください。
