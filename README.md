@@ -13,3 +13,6 @@
 * [Railsのセッションのサンプルアプリ(2章)](https://github.com/shunichi/rails-auth-book-examples/tree/main/session-example)
 * [OpenID Connect サンプルアプリ(3章)](https://github.com/shunichi/rails-auth-book-examples/tree/main/oidc-example)
 * [GoogleのIDトークンの検証(3章)](https://github.com/shunichi/rails-auth-book-examples/blob/main/scripts/verify_google_id_token.rb)
+
+## 紙の書籍の正誤表
+* [紙の書籍(ver 1.0)の正誤表](https://github.com/shunichi/rails-auth-book-examples/blob/main/errata.md)
